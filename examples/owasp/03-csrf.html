@@ -1,0 +1,25 @@
+<!--
+Exemplo comentado: CSRF (Cross-Site Request Forgery).
+O formulário está comentado para evitar execução acidental.
+
+Para ativar em ambiente de laboratório, remova os comentários HTML e implemente tokens anti-CSRF.
+-->
+
+<!--
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>Exemplo CSRF</title>
+  </head>
+  <body>
+    <h2>Transferência de saldo (exemplo vulnerável)</h2>
+    <!-- Vulnerável: ação por GET sem token CSRF -->
+    <form method="GET" action="/transfer">
+      <label>Conta destino: <input name="to" value="12345"></label><br>
+      <label>Valor: <input name="amount" value="10"></label><br>
+      <button type="submit">Transferir</button>
+    </form>
+  </body>
+</html>
+-->

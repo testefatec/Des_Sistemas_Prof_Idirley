@@ -1,0 +1,29 @@
+<!--
+Exemplo comentado: XSS refletido (A7: Cross-Site Scripting).
+O conteúdo está comentado para evitar execução acidental em ambientes não controlados.
+
+Para ativar o exemplo em ambiente controlado, remova os comentários HTML (<!-- ... -->).
+-->
+
+<!--
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>Reflected XSS - exemplo</title>
+  </head>
+  <body>
+    <h2>Exemplo de XSS refletido</h2>
+    <p>Abra a URL com um parâmetro <code>?name=SeuNome</code></p>
+    <div id="greeting"></div>
+
+    <script>
+      // Vulnerabilidade: inserir diretamente o valor do parâmetro no HTML sem escape
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get('name') || 'visitante';
+      // A linha abaixo é vulnerável a XSS se 'name' contiver HTML/JS
+      document.getElementById('greeting').innerHTML = 'Olá, ' + name + '!';
+    </script>
+  </body>
+</html>
+-->
