@@ -1,0 +1,48 @@
+name: PR notify professor
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+    branches:
+      - uat
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare payload
+        id: payload
+        run: |
+          echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
+          echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
+          echo "PR_USER=${{ github.event.pull_request.user.login }}" >> $GITHUB_OUTPUT
+          echo "PR_ACTION=${{ github.event.action }}" >> $GITHUB_OUTPUT
+
+      - name: Send email via SendGrid
+        if: ${{ secrets.SENDGRID_API_KEY != '' && secrets.SENDER_EMAIL != '' }}
+        env:
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          TEACHER_EMAIL: "idirley.soares@fatec.sp.gov.br"
+          PR_TITLE: ${{ steps.payload.outputs.PR_TITLE }}
+          PR_URL: ${{ steps.payload.outputs.PR_URL }}
+          PR_USER: ${{ steps.payload.outputs.PR_USER }}
+          PR_ACTION: ${{ steps.payload.outputs.PR_ACTION }}
+        run: |
+          read -r -d '' BODY << EOM || true
+          {
+            "personalizations": [{
+              "to": [{"email": "${TEACHER_EMAIL}"}],
+              "subject": "[Aula] Atualização de PR: ${PR_TITLE}"
+            }],
+            "from": {"email": "${SENDER_EMAIL}"},
+            "content": [{"type":"text/plain","value":"PR: ${PR_TITLE}\nURL: ${PR_URL}\nAutor: ${PR_USER}\nAção: ${PR_ACTION}\n"}]
+          }
+          EOM
+
+          curl -s --request POST \
+            --url https://api.sendgrid.com/v3/mail/send \
+            --header "Authorization: Bearer ${SENDGRID_API_KEY}" \
+            --header 'Content-Type: application/json' \
+            --data "${BODY}"
