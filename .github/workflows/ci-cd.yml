@@ -45,7 +45,7 @@ jobs:
         if: ${{ needs.detect.outputs.has_code == 'true' }}
         uses: github/codeql-action/init@v2
         with:
-          languages: [javascript, python, php]
+          languages: 'javascript,python,php'
 
       - name: Autobuild
         if: ${{ needs.detect.outputs.has_code == 'true' }}
