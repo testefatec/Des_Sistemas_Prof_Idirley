@@ -195,15 +195,9 @@ No seu fork > Settings > Secrets and variables > Actions > New repository secret
 - `AWS_REGION` — ex: `us-east-1`
 - `S3_BUCKET` — nome do bucket
 
-Para o envio de e-mails pelo workflow PR, crie também:
-- `SENDGRID_API_KEY` — chave API do SendGrid (ou outro serviço SMTP)
-- `SENDER_EMAIL` — e-mail remetente autorizado no SendGrid
+Observação: o projeto não utiliza notificações por e-mail automáticas via workflow. Não é necessário criar keys do SendGrid para este repositório.
 
-## 9) Notificações por e-mail para o professor
-
-O workflow `.github/workflows/pr_notify.yml` envia um e-mail ao professor (idirley.soares@fatec.sp.gov.br) quando um PR for criado/atualizado, usando SendGrid. O responsável pela turma deve adicionar `SENDGRID_API_KEY` e `SENDER_EMAIL` como secrets no repositório.
-
-## 10) Roteiro de aulas (2 x 30 min)
+## 9) Roteiro de aulas (2 x 30 min)
 
 Aula 1 (30 min) — Fundamentos e Git
 - 0–5min: Apresentação do objetivo da atividade
