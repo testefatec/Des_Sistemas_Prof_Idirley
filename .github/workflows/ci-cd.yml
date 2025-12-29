@@ -1,7 +1,7 @@
 name: CI/CD - scans and deploy
 permissions:
-contents: read
-security-events: write
+  contents: read
+  security-events: write
 
 on:
   push:
