@@ -64,20 +64,80 @@ Fluxo simples:
 - Após validação em `uat`, abra PR de `uat` para `main` para promover para produção.
 
 ## 5) Como fazer PRs para UAT / PRD
+Este passo-a-passo é para quem nunca usou o GitHub — explicações claras e comandos exatos.
 
-1. Crie branch local baseada em `dev`:
+Fluxo resumido:
+- Trabalhe em uma branch nova a partir de `dev`.
+- Abra um PR do seu branch para `uat` (teste).
+- Após merge em `uat`, abra um PR de `uat` para `main` (produção).
+
+Passo-a-passo detalhado (FOR DUMMIES):
+
+1) Preparar o repositório local (já clonou seu fork?):
 
 ```bash
-git checkout -b feat/minha-alteracao dev
-# editar arquivos
-git add .
-git commit -m "Minha alteração"
-git push origin feat/minha-alteracao
+# entre na pasta do repositório
+cd Des_Sistemas_Prof_Idirley
+
+# verifique branches e troque para dev
+git fetch origin
+git checkout dev
+git pull origin dev
 ```
 
-2. No GitHub (seu fork), abra um Pull Request para `uat` (base: `uat`, compare: `feat/minha-alteracao`).
-3. Quando o PR for aprovado e mergeado para `uat`, a pipeline definida em `.github/workflows/ci-cd.yml` executará CodeQL + gitleaks e fará deploy para o bucket S3 configurado para `uat`.
-4. Para promover para produção, abra PR de `uat` para `main`.
+2) Criar sua branch nova (sempre um nome claro):
+
+```bash
+git checkout -b feat/meu-nome
+```
+
+3) Fazer alterações (edite arquivos no editor, ex.: adicione seu nome em `index.html`).
+
+4) Salvar, adicionar e commitar:
+
+```bash
+git add .
+git commit -m "Adiciona nome do aluno: Seu Nome"
+```
+
+5) Enviar sua branch para o GitHub (push):
+
+```bash
+git push origin feat/meu-nome
+```
+
+6) Abrir o Pull Request na interface web (passo a passo):
+
+- Acesse `https://github.com/<seu-usuario>/Des_Sistemas_Prof_Idirley` (substitua `<seu-usuario>` pelo seu usuário GitHub).
+- Clique em **Pull requests** → **New pull request**.
+- Em **base repository / base**, selecione `uat`.
+- Em **compare**, selecione `feat/meu-nome` (sua branch).
+- Escreva um título claro (ex.: "Adiciona nome do aluno") e uma descrição curta.
+- Clique em **Create pull request**.
+
+7) Se o revisor pedir mudanças:
+
+- Faça as correções localmente na mesma branch `feat/meu-nome`.
+- `git add` → `git commit` → `git push origin feat/meu-nome` novamente.
+- O PR será atualizado automaticamente com seus novos commits.
+
+8) Merge e deploy para UAT:
+
+- Quando o PR for aprovado, clique em **Merge pull request** → **Confirm merge**.
+- Após o merge, o workflow `ci-cd.yml` executará CodeQL, gitleaks e deploy para o bucket S3 de UAT. Verifique em **Actions** se houve sucesso.
+
+9) Promover UAT → PRD (main):
+
+- No GitHub, abra um novo PR onde **base** = `main` e **compare** = `uat`.
+- Escreva a descrição (ex.: "Promove alterações testadas em UAT para produção").
+- Após aprovação e merge, o workflow rodará para a `main` e fará deploy para PRD.
+
+Dicas extras para iniciantes:
+- Para criar a branch no site: abra o repositório no GitHub, clique em **main/dev**, digite `feat/meu-nome` e pressione Enter (cria a branch a partir da selecionada).
+- Se o `git push` pedir senha, use o `gh auth login` ou crie um Personal Access Token (PAT) e use como sua senha HTTPS.
+- Sempre dê nomes claros para as branches (`feat/`, `fix/`, `docs/`) e mensagens de commit descritivas.
+
+Quer que eu gere um `PR_CHECKLIST.md` imprimível com estes passos? (Posso criar agora.)
 
 ## 6) O que faz o pipeline (`.github/workflows/ci-cd.yml`)
 
