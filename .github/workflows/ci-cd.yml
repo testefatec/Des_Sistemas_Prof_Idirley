@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run gitleaks (detect secrets)
-        uses: zricethezav/gitleaks-action@v1
+        uses: zricethezav/gitleaks-action@v2
         with:
           args: '--path=. --redact'
 
