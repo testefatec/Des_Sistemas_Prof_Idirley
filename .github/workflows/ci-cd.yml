@@ -17,7 +17,7 @@ jobs:
       has_code: ${{ steps.check.outputs.has_code }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Check for JavaScript / TypeScript / Python / PHP / HTML files
         id: check
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Skip CodeQL if no supported source files found
         if: ${{ needs.detect.outputs.has_code == 'false' }}
@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: codeql
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run gitleaks (detect secrets)
         uses: zricethezav/gitleaks-action@v1
         with:
@@ -75,7 +75,7 @@ jobs:
     needs: [secret-scan]
     environment: ${{ github.ref == 'refs/heads/main' && 'PRD' || 'UAT' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Sync to S3
         uses: aws-actions/configure-aws-credentials@v2
