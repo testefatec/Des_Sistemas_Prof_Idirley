@@ -27,6 +27,133 @@
           <li>Configurar deploy para ambiente estático na AWS (S3).</li>
         </ul>
       </section>
+
+      <section class="card">
+        <h3>Exercícios OWASP (comentados)</h3>
+        <p>Esta seção contém 7 exemplos didáticos de vulnerabilidades (comentadas). Cada bloco traz instruções — os alunos devem <strong>descomentar um bloco por vez</strong> para aprender como o CodeQL e o CI/CD detectam as falhas.</p>
+
+        <!-- BEGIN VULN-1: Reflected XSS -->
+        <!--
+        Vulnerabilidade: Reflected Cross-Site Scripting (XSS).
+        Instrução: Remova estes comentários (<!-- ... -->) para ativar o exemplo e abra a URL com ?name=<script>alert(1)</script> para testar.
+        O objetivo é mostrar como inserir dados vindos da URL direto no DOM sem escape.
+
+        <h4>VULN 1 — Reflected XSS</h4>
+        <form method="GET" action="">
+          <label>Seu nome: <input name="name" /></label>
+          <button type="submit">Enviar</button>
+        </form>
+        <div id="vuln1-output"></div>
+        <script>
+          // vulnerável: inserir diretamente o parâmetro no innerHTML
+          const params = new URLSearchParams(window.location.search);
+          const name = params.get('name');
+          if (name) document.getElementById('vuln1-output').innerHTML = 'Olá, ' + name;
+        </script>
+        -->
+        <!-- END VULN-1 -->
+
+        <!-- BEGIN VULN-2: DOM-based XSS -->
+        <!--
+        Vulnerabilidade: DOM-based XSS (manipulação do fragmento/hash).
+        Instrução: Descomente e use URL com #msg=%3Cscript%3Ealert(2)%3C/script%3E
+        -->
+
+        <!--
+        <h4>VULN 2 — DOM-based XSS</h4>
+        <div id="vuln2">Mensagem: </div>
+        <script>
+          // vulnerável: usar location.hash diretamente
+          const raw = decodeURIComponent(location.hash.substring(1));
+          if (raw) document.getElementById('vuln2').innerHTML += raw;
+        </script>
+        -->
+        <!-- END VULN-2 -->
+
+        <!-- BEGIN VULN-3: Unsafe eval() -->
+        <!--
+        Vulnerabilidade: execução de código com eval() usando entrada do usuário.
+        Instrução: descomente e acesse ?code=2+2 para ver o resultado; tente payloads maliciosos em ambiente controlado.
+        -->
+
+        <!--
+        <h4>VULN 3 — Unsafe eval()</h4>
+        <form method="GET">
+          <label>Code: <input name="code" value="2+2"/></label>
+          <button>Run</button>
+        </form>
+        <pre id="vuln3"></pre>
+        <script>
+          const p = new URLSearchParams(location.search);
+          const code = p.get('code');
+          if (code) {
+            // inseguro: eval executa código arbitrário
+            try { document.getElementById('vuln3').textContent = eval(code); } catch(e) { document.getElementById('vuln3').textContent = 'Erro'; }
+          }
+        </script>
+        -->
+        <!-- END VULN-3 -->
+
+        <!-- BEGIN VULN-4: Hardcoded API key -->
+        <!--
+        Vulnerabilidade: chave/API key hardcoded em JavaScript (exposição de credenciais).
+        Instrução: descomente para ver a chave disponível no console (NÃO use em produção).
+        -->
+
+        <!--
+        <h4>VULN 4 — Hardcoded API Key</h4>
+        <script>
+          // Exemplo inseguro: chave visível no cliente
+          const API_KEY = 'AKIAEXEMPLO1234567890';
+          console.log('Chave API (insegura):', API_KEY);
+        </script>
+        -->
+        <!-- END VULN-4 -->
+
+        <!-- BEGIN VULN-5: Sensitive data in localStorage -->
+        <!--
+        Vulnerabilidade: armazenamento de senhas/dados sensíveis em localStorage.
+        Instrução: descomente e clique para salvar uma senha no armazenamento local (apenas em laboratório).
+        -->
+
+        <!--
+        <h4>VULN 5 — Sensitive Data in localStorage</h4>
+        <form id="login-form">
+          <label>Usuário: <input id="u"/></label>
+          <label>Senha: <input id="p" type="password"/></label>
+          <button type="button" onclick="localStorage.setItem('pwd', document.getElementById('p').value); alert('Senha salva (inseguro)');">Salvar</button>
+        </form>
+        -->
+        <!-- END VULN-5 -->
+
+        <!-- BEGIN VULN-6: CSRF via image GET -->
+        <!--
+        Vulnerabilidade: CSRF (requisição sem proteção).
+        Instrução: descomente para ver como uma imagem pode disparar uma ação GET em outro domínio (exemplo didático).
+        -->
+
+        <!--
+        <h4>VULN 6 — CSRF (imagem)</h4>
+        <p>Ao carregar a página abaixo o browser fará uma requisição GET que poderia executar ação em outra sessão.</p>
+        <img src="https://example.com/transfer?to=attacker&amount=100" alt="csrf" />
+        -->
+        <!-- END VULN-6 -->
+
+        <!-- BEGIN VULN-7: Insecure Direct Object Reference (IDOR) -->
+        <!--
+        Vulnerabilidade: IDOR — referência direta a recurso sem verificação de autorização.
+        Instrução: descomente e observe o link que acessa um recurso sensível por ID.
+        -->
+
+        <!--
+        <h4>VULN 7 — IDOR (Insecure Direct Object Reference)</h4>
+        <p>Exemplo de link que aponta diretamente para um recurso por ID.</p>
+        <a href="/download?file=private-report-1234.pdf">Download relatório privado</a>
+        -->
+        <!-- END VULN-7 -->
+
+        <p><em>Instrutor: peça aos alunos para descomentar apenas um bloco por vez e observar os resultados nos logs do Actions / no navegador.</em></p>
+      </section>
     </main>
 
     <footer>
