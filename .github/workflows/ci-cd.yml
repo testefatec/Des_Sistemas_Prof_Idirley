@@ -43,19 +43,19 @@ jobs:
 
       - name: Initialize CodeQL
         if: ${{ needs.detect.outputs.has_code == 'true' }}
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v4
         with:
           languages: 'javascript,python'
 
       - name: Autobuild
         if: ${{ needs.detect.outputs.has_code == 'true' }}
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@v4
 
       - name: Run CodeQL
         if: ${{ needs.detect.outputs.has_code == 'true' }}
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v4
 
-      # Note: `github/codeql-action/analyze@v2` uploads SARIF automatically.
+      # Note: `github/codeql-action/analyze@v4` uploads SARIF automatically.
       # Removed explicit `upload-sarif` step to avoid 'Path does not exist: results.sarif' errors.
 
   secret-scan:
